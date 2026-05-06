@@ -1,5 +1,5 @@
 -- midi player cloud by chloespacedout
--- version 1.3
+-- version 1.4
 
 local midiPlayer = require("midiPlayer")
 local midiParser = require("midiParser")
@@ -103,16 +103,18 @@ local function newInstance(ID,target,avatarInstance)
     if avatarInstance and type(avatarInstance) == "AvatarAPI" then
         local permissionLevel
         local avatarName
+        local avatarOwner
         local isSuccessful = pcall(function()
             permissionLevel = avatar.getPermissionLevel(avatarInstance)
             avatarName = avatar.getName(avatarInstance)
+            avatarOwner = avatar:getEntityName()
         end)
         if not isSuccessful then
             log("Could not create midi player cloud instance as avatar instance was invalid")
             return
         end
         if permissionLevel ~= "MAX" then
-            log("Could not create midi player cloud instance as client \"" .. avatarName .. "\" is not set to MAX perms")
+            log("Could not create midi player cloud instance as user \"" .. avatarOwner .. "\" with avatar \"" .. avatarName .. "\" is not set to MAX perms")
             return
         end
     else

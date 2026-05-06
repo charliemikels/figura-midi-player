@@ -1,5 +1,5 @@
 -- midi player client by chloespacedout
--- version 1.4
+-- version 1.5
 
 --#REGION global
 --#REGION setup
@@ -99,7 +99,7 @@ function events.tick()
             midiPlayer.hasMadeInstance = true
             if not midiPlayer.instance then 
                 if host:isHost() and actions.midiPlayer then
-                    actions.midiPlayer:setTitle("Midi Player\nERROR: Midi player avatar is not set to MAX permissions")
+                    actions.midiPlayer:setTitle("Midi Player\nERROR: Midi player cloud is not set to MAX permissions")
                 end
                 return
             end
@@ -109,7 +109,19 @@ function events.tick()
                         :setOnLeftClick(function() action_wheel:setPage(midiPlayer.page) end)
             end
             midiPlayer.instance:setShouldKillInstance(function()
-                return not midiPlayer.instance.shouldKeepAlive
+                
+                local isHostOffline = true
+                for _,playerName in pairs(client.getTabList().players) do
+                    if string.find(playerName,midiPlayer.owner) then
+                        isHostOffline = false
+                    end
+                end
+
+                if isHostOffline then
+                    return not midiPlayer.instance.shouldKeepAlive
+                else
+                    return false
+                end
             end)
         end
     elseif midiPlayer.instance then
